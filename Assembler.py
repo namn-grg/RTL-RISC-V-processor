@@ -63,9 +63,9 @@ func3={
     "lbu":"100",
     "sb":"000",
     "sw":"010",
-    "adii":"000",
+    "addi":"000",
     "slti":"010",
-    "addi":"111",
+    "andi":"111",
     "add":"000",
     "sub":"000",
     "sll":"001",
@@ -215,12 +215,13 @@ for i in output:
 
 # -------------------------------------------TESTING STARTS----------------------------------------------------------------------------
 
-# for i in range(len(output)):
-#     if output[i] == exp_output[i]:
-#         print("Test case passed on line ", i)
-#     else:
-#         print("Test case failed on line ", i)
-#         print("Expected output: ", exp_output[i])
-#         print("Actual output:   ", output[i])
+for i in range(len(output)):
+    if output[i] == exp_output[i]:
+        print("Test case passed on line ", i)
+    else:
+        print("Test case failed on line ", i)
+        print("Input:           ", code[i])
+        print("Actual output:   ", output[i])
+        print("Expected output: ", exp_output[i])
 
 # -------------------------------------------TESTING ENDS----------------------------------------------------------------------------
