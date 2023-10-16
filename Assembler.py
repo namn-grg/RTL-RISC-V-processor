@@ -136,12 +136,12 @@ def typeR(value, rs2, rs1, rd):
 
 def typeI(value, imm, rs1, rd):
     imm = dec_to_binary(imm, 12)
-    machinecode = imm[::-1] + register[rs1] + func3[value] + register[rd] + operations[value][1]
+    machinecode = imm + register[rs1] + func3[value] + register[rd] + operations[value][1]
     return machinecode
 
 def typeS(value, imm, rs2, rs1):
     imm = dec_to_binary(imm, 12)
-    machinecode = imm[11:4:-1] + register[rs2] + register[rs1] + func3[value] + imm[4:0:-1] + imm[0] + operations[value][1]
+    machinecode = imm[0:7] + register[rs2] + register[rs1] + func3[value] + imm[7:11] + imm[11] + operations[value][1]
     return machinecode
 
 def typeSB(value, imm, rs2, rs1):
