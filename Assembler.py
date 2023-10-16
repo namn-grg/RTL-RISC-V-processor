@@ -6,6 +6,9 @@ import re
 with open('test_case1.txt') as f:  # here test_case1.txt is an input file with assembly code
     code = f.read().splitlines()
 
+with open('exp_output.txt') as f:  # here output.txt is an output file with machine code
+    exp_output = f.read().splitlines()
+
 register = {
     "x0": "00000", "x1": "00001", "x2": "00010", "x3": "00011", "x4": "00100", "x5": "00101", "x6": "00110", "x7": "00111", "x8": "01000","x9": "01001",
   "x10": "01010","x11": "01011", "x12": "01100","x13": "01101","x14": "01110", "x15": "01111", "x16": "10000","x17": "10001","x18": "10010","x19": "10011",
@@ -63,7 +66,7 @@ func3={
     "SW":"010",
     "ADII":"000",
     "SLTI":"010",
-    "ANDI":"111",
+    "ADDI":"111",
     "ADD":"000",
     "SUB":"000",
     "SLL":"001",
@@ -90,7 +93,7 @@ func7={
     "OR": "0000000"
 }
 
-def dec_to_binary(n):
+def dec_to_binary(n, length):
     n = int(n)
     binarycode = ""
 
@@ -99,12 +102,12 @@ def dec_to_binary(n):
         n = int(n/2)
 
     binarycode = binarycode[::-1]
-    x = "0"*(12-len(binarycode))
+    x = "0"*(length-len(binarycode))
     finalcode = x+binarycode
     return finalcode
 
 def hex_to_binary(hex_number):
-    binary_length=12
+    binary_length=32
     try:
         # Convert the hexadecimal number to binary
         binary = bin(int(hex_number, 16))[2:]
@@ -134,23 +137,23 @@ def typeR(value, rs2, rs1, rd):
     return machinecode
 
 def typeI(value, imm, rs1, rd):
-    imm = dec_to_binary(imm)
-    machinecode = imm[11:0] + register[rs1] + func3[value] + register[rd] + operations[value][1]
+    imm = dec_to_binary(imm, 12)
+    machinecode = imm[::-1] + register[rs1] + func3[value] + register[rd] + operations[value][1]
     return machinecode
 
 def typeS(value, imm, rs2, rs1):
-    imm = dec_to_binary(imm)
-    machinecode = imm[11:5] + register[rs2] + register[rs1] + func3[value] + imm[4:0] + operations[value][1]
+    imm = dec_to_binary(imm, 12)
+    machinecode = imm[11:4:-1] + register[rs2] + register[rs1] + func3[value] + imm[4:0:-1] + imm[0] + operations[value][1]
     return machinecode
 
 def typeSB(value, imm, rs2, rs1):
-    imm = dec_to_binary(imm)
-    machinecode = imm[12] + imm[10:5] + register[rs2] + register[rs1] + func3[value] + imm[4:1] + imm[11] + operations[value][1]
+    imm = dec_to_binary(imm, 13)
+    machinecode = imm[12] + imm[10:4:-1] + register[rs2] + register[rs1] + func3[value] + imm[4:0] + imm[11] + operations[value][1]
     return machinecode
 
 def typeU(value, imm, rd):
     imm = hex_to_binary(imm[2:])
-    machinecode = imm[31:12] + register[rd] + operations[value][1]
+    machinecode = imm[31:11:-1] + register[rd] + operations[value][1]
     return machinecode
 
 # Excluded for now
@@ -158,34 +161,67 @@ def typeUJ(value, imm, rd):
     machinecode = imm[20] + imm[10:1] + imm[11] + imm[19:12] + register[rd] + operations[value][1]
     return machinecode
 
-
 # -------------------------------------------PRINTING STARTS----------------------------------------------------------------------------
 
+i = 0
+line_list_arr = []
+output = []
+
 for line in code:
+    print (line+" ", i)
+    temp_list = custom_split(line)
 
-    if len(line) == 0:
-        continue
+    if temp_list[0] == "LW" :
+        temp = temp_list[3]
+        temp_list[3] = temp_list[2]
+        temp_list[2] = temp
 
-    line_list = custom_split(line)
+    line_list_arr.append(temp_list)
+    i+=1
 
-for line in line_list:
+# print(line_list_arr)
+
+
+for line_list in line_list_arr:
 
     if line_list[0] in operations.keys():
 
         if operations[line_list[0]][0] == "R":
-            print(typeR(line_list[0], line_list[3], line_list[2], line_list[1]))
+            output.append(typeR(line_list[0], line_list[3], line_list[2], line_list[1]))
 
         elif operations[line_list[0]][0] == "I":
-            print(typeI(line_list[0], line_list[3], line_list[2], line_list[1]))
+            output.append(typeI(line_list[0], line_list[3], line_list[2], line_list[1]))
 
         elif operations[line_list[0]][0] == "S":
-            print(typeS(line_list[0], line_list[2], line_list[1], line_list[3]))
+            output.append(typeS(line_list[0], line_list[2], line_list[1], line_list[3]))
 
         elif operations[line_list[0]][0] == "SB":
-            print(typeSB(line_list[0], line_list[3], line_list[2], line_list[1])) 
+            output.append(typeSB(line_list[0], line_list[3], line_list[2], line_list[1])) 
 
         elif operations[line_list[0]][0] == "U":
-            print(typeU(line_list[0], line_list[2], line_list[1]))
+            output.append(typeU(line_list[0], line_list[2], line_list[1]))
 
         elif operations[line_list[0]][0] == "UJ":
-            print(typeUJ(line_list[0], line_list[2], line_list[1]))
+            output.append(typeUJ(line_list[0], line_list[2], line_list[1]))
+    
+    else:
+        output.append("Invalid Instruction")
+
+    
+for i in output:
+    print(i)
+
+# -------------------------------------------PRINTING ENDS----------------------------------------------------------------------------
+
+
+# -------------------------------------------TESTING STARTS----------------------------------------------------------------------------
+
+# for i in range(len(output)):
+#     if output[i] == exp_output[i]:
+#         print("Test case passed on line ", i)
+#     else:
+#         print("Test case failed on line ", i)
+#         print("Expected output: ", exp_output[i])
+#         print("Actual output:   ", output[i])
+
+# -------------------------------------------TESTING ENDS----------------------------------------------------------------------------
