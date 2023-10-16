@@ -17,80 +17,78 @@ register = {
 }
 
 operations = {
-    "LUI": ['U', "0110111"],
-    "AUIPC": ['U', "0010111"],
-    # "JAL": ['UJ', "1101111"],
-    # "JALR": ['I', "1100111"],
-    "BEQ": ['SB', "1100011"],
-    "BNE": ['SB', "1100011"],
-    "BLT": ['SB', "1100011"],
-    "BGE": ['SB', "1100011"],
-    "BLTU": ['SB', "1100011"],
-    "BGEU": ['SB', "1100011"],
-    "LB": ['I', "0000011"],
-    "LH": ['I', "0000011"],
-    "LW": ['I', "0000011"],
-    "LBU": ['I', "0000011"],
-    "LHU": ['I', "0000011"],
-    "SB": ['S', "0100011"],
-    "SH": ['S', "0100011"],
-    "SW": ['S', "0100011"],
-    "ADDI": ['I', "0010011"],
-    "SLTI": ['I', "0010011"],
-    "SLTIU": ['I', "0010011"],
-    "XORI": ['I', "0010011"],
-    "ORI": ['I', "0010011"],
-    "ANDI": ['I', "0010011"],
-    "ADD": ['R', "0110011"],
-    "SUB": ['R', "0110011"],
-    "SLL": ['R', "0110011"],
-    "SLT": ['R', "0110011"],
-    "SLTU": ['R', "0110011"],
-    "XOR": ['R', "0110011"],
-    "SRL": ['R', "0110011"],
-    "SRA": ['R', "0110011"],
-    "OR": ['R', "0110011"],
-    "AND": ['R', "0110011"]
-  
+    "lui": ['u', "0110111"],
+    "auipc": ['u', "0010111"],
+    # "jal": ['uj', "1101111"],
+    # "jalr": ['i', "1100111"],
+    "beq": ['sb', "1100011"],
+    "bne": ['sb', "1100011"],
+    "blt": ['sb', "1100011"],
+    "bge": ['sb', "1100011"],
+    "bltu": ['sb', "1100011"],
+    "bgeu": ['sb', "1100011"],
+    "lb": ['i', "0000011"],
+    "lh": ['i', "0000011"],
+    "lw": ['i', "0000011"],
+    "lbu": ['i', "0000011"],
+    "lhu": ['i', "0000011"],
+    "sb": ['s', "0100011"],
+    "sh": ['s', "0100011"],
+    "sw": ['s', "0100011"],
+    "addi": ['i', "0010011"],
+    "slti": ['i', "0010011"],
+    "sltiu": ['i', "0010011"],
+    "xori": ['i', "0010011"],
+    "ori": ['i', "0010011"],
+    "andi": ['i', "0010011"],
+    "add": ['r', "0110011"],
+    "sub": ['r', "0110011"],
+    "sll": ['r', "0110011"],
+    "slt": ['r', "0110011"],
+    "sltu": ['r', "0110011"],
+    "xor": ['r', "0110011"],
+    "srl": ['r', "0110011"],
+    "sra": ['r', "0110011"],
+    "or": ['r', "0110011"],
+    "and": ['r', "0110011"]
 }
 
 func3={
-    "BEQ":"000",
-    "BNE":"001",
-    "BLT":"100",
-    "BGE":"101",
-    "LB":"000",
-    "LW":"010",
-    "LBU":"100",
-    "SB":"000",
-    "SW":"010",
-    "ADII":"000",
-    "SLTI":"010",
-    "ADDI":"111",
-    "ADD":"000",
-    "SUB":"000",
-    "SLL":"001",
-    "SLT":"010",
-    "SLTU":"011",
-    "XOR":"100",
-    "SRL":"101",
-    "SRA":"101",
-    "AND":"111",
-    "OR":"110"
-
+    "beq":"000",
+    "bne":"001",
+    "blt":"100",
+    "bge":"101",
+    "lb":"000",
+    "lw":"010",
+    "lbu":"100",
+    "sb":"000",
+    "sw":"010",
+    "adii":"000",
+    "slti":"010",
+    "addi":"111",
+    "add":"000",
+    "sub":"000",
+    "sll":"001",
+    "slt":"010",
+    "sltu":"011",
+    "xor":"100",
+    "srl":"101",
+    "sra":"101",
+    "and":"111",
+    "or":"110"
 }
 
 func7={
-    "ADD":"0000000",
-    "SUB":"0100000",
-    "SLL":"0000000",
-    "SLT":"0000000",
-    "SLTU":"0000000",
-    "XOR":"0000000",
-    "SRL":"0000000",
-    "SRA":"0100000",
-    "AND":"0000000",
-    "OR": "0000000"
+    "add":"0000000",
+    "sub":"0100000",
+    "sll":"0000000",
+    "slt":"0000000",
+    "sltu":"0000000",
+    "xor":"0000000",
+    "srl":"0000000",
+    "sra":"0100000",
+    "and":"0000000",
+    "or": "0000000"
 }
 
 def dec_to_binary(n, length):
@@ -168,15 +166,16 @@ line_list_arr = []
 output = []
 
 for line in code:
-    print (line+" ", i)
     temp_list = custom_split(line)
 
-    if temp_list[0] == "LW" :
+    if temp_list[0] == "lw" :
         temp = temp_list[3]
         temp_list[3] = temp_list[2]
         temp_list[2] = temp
 
     line_list_arr.append(temp_list)
+    print(temp_list)
+
     i+=1
 
 # print(line_list_arr)
@@ -186,22 +185,22 @@ for line_list in line_list_arr:
 
     if line_list[0] in operations.keys():
 
-        if operations[line_list[0]][0] == "R":
+        if operations[line_list[0]][0] == "r":
             output.append(typeR(line_list[0], line_list[3], line_list[2], line_list[1]))
 
-        elif operations[line_list[0]][0] == "I":
+        elif operations[line_list[0]][0] == "i":
             output.append(typeI(line_list[0], line_list[3], line_list[2], line_list[1]))
 
-        elif operations[line_list[0]][0] == "S":
+        elif operations[line_list[0]][0] == "s":
             output.append(typeS(line_list[0], line_list[2], line_list[1], line_list[3]))
 
-        elif operations[line_list[0]][0] == "SB":
+        elif operations[line_list[0]][0] == "sb":
             output.append(typeSB(line_list[0], line_list[3], line_list[2], line_list[1])) 
 
-        elif operations[line_list[0]][0] == "U":
+        elif operations[line_list[0]][0] == "u":
             output.append(typeU(line_list[0], line_list[2], line_list[1]))
 
-        elif operations[line_list[0]][0] == "UJ":
+        elif operations[line_list[0]][0] == "uj":
             output.append(typeUJ(line_list[0], line_list[2], line_list[1]))
     
     else:

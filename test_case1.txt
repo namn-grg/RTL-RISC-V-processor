@@ -1,22 +1,25 @@
-ADDI x1, x0, 4
-ADDI x4,x0,16
-ADDI x6,x0,35
-ADDI x9,x0,51
-SW x1,4(x0)
-ADDI x10,x4,15
-SUB x10,x6,x4
-SLL x9,x4,x1
-SUB x20, x6, x4
-AND x7,x6,x4
-OR x8,x6,x11
-ADDI x9,x0,51
-LW x30, 0(x1)
-SRA x6,x4,x1
-AND x28,x8,x3
-SUB x9,x0,x5
-SW x1,4(x0)
-ADDI x10,x4,15
-SUB x10,x6,x4
-SLL x9,x4,x1
-SUB x20, x6, x4
-AND x7,x6,x4
+addi x1, x0, 4
+addi x4,x0,16
+addi x6,x0,35
+addi x9,x0,51
+sw x1,4(x0)
+addi x10,x4,15
+sub x10,x6,x4
+sll x9,x4,x1
+sub x20, x6, x4
+and x7,x6,x4
+or x8,x6,x11
+lw x3, 0(x1)
+add x9,x9,x10
+sra x5, x4,x1
+sub x4,x1,x0
+sub x6,x3,x0
+and x28,x8,x3
+sub x9,x0,x28
+sw x1,4(x0)
+addi x10,x4,15
+sub x10,x6,x10
+sll x9,x4,x1
+lw x3, 0(x1)
+sub x6,x3,x0
+and x7,x6,x4
