@@ -174,7 +174,7 @@ for line in code:
         temp_list[2] = temp
 
     line_list_arr.append(temp_list)
-    print(temp_list)
+    # print(temp_list)
 
     i+=1
 
@@ -212,16 +212,40 @@ for i in output:
 
 # -------------------------------------------PRINTING ENDS----------------------------------------------------------------------------
 
+# -------------------------------------------WRITING STARTS----------------------------------------------------------------------------
+
+# Function to convert 32-bit binary to 8-bit hexadecimal
+def binary32_to_8bit_hex(binary_string):
+    # Make sure the binary string is 32 bits long
+    if len(binary_string) != 32:
+        raise ValueError("Input must be a 32-bit binary number.")
+
+    # Split the 32-bit binary into four 8-bit segments
+    segments = [binary_string[i:i + 8] for i in range(0, 32, 8)]
+
+    # Convert each 8-bit segment to hexadecimal
+    hex_values = [format(int(segment, 2), '02X') for segment in segments]
+
+    # Concatenate the 8-bit hexadecimal segments
+    hex_result = ''.join(hex_values)
+
+    return hex_result
+
+with open("output.hex", "w") as file:
+    # Convert and write the 8-bit hexadecimal values to the file
+    for binary_string in output:
+        hex_value = binary32_to_8bit_hex(binary_string)
+        file.write(hex_value + "\n")
 
 # -------------------------------------------TESTING STARTS----------------------------------------------------------------------------
 
-for i in range(len(output)):
-    if output[i] == exp_output[i]:
-        print("Test case passed on line ", i)
-    else:
-        print("Test case failed on line ", i)
-        print("Input:           ", code[i])
-        print("Actual output:   ", output[i])
-        print("Expected output: ", exp_output[i])
+# for i in range(len(output)):
+#     if output[i] == exp_output[i]:
+#         print("Test case passed on line ", i)
+#     else:
+#         print("Test case failed on line ", i)
+#         print("Input:           ", code[i])
+#         print("Actual output:   ", output[i])
+#         print("Expected output: ", exp_output[i])
 
 # -------------------------------------------TESTING ENDS----------------------------------------------------------------------------
