@@ -1,22 +1,21 @@
-addi x1, x0, 4
-addi x4,x0,16
-addi x6,x0,35
-addi x9,x0,51
-sw x1,4(x0)
-addi x10,x4,15
-sub x10,x6,x4
-sll x9,x4,x1
-sub x20, x6, x4
-and x7,x6,x4
-or x8,x6,x11
-addi x9,x0,51
-lw x30, 0(x1)
-sra x6,x4,x1
-and x28,x8,x3
-sub x9,x0,x5
-sw x1,4(x0)
-addi x10,x4,15
-sub x10,x6,x4
-sll x9,x4,x1
-sub x20, x6, x4
-and x7,x6,x4
+sw x2, 2(x7)
+add x0, x1, x3
+sub x4, x5, x6
+xor x7, x8, x9
+xor x10, x11, x12
+srl x13, x16, x15
+sra x1, x0, x3
+or x2, x4, x6
+lw x7, 2(x8)
+lw x9, 5(x14)
+sb x11, 2(x12)
+sll x15, x17, x18
+slti x1, x0, 5
+or  x4, x5, x6
+addi x7, x8, 10
+sw x11, 0(x10)
+or x12, x9, x13
+sub x15, x16, x14
+and x0, x1, x2
+or x3, x4, x5
+sub x6, x7, x12
