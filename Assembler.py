@@ -3,7 +3,7 @@ import re
 
 # code = sys.stdin.read().splitlines()
 
-with open('test_case1.txt') as f:  # here test_case1.txt is an input file with assembly code
+with open('test_case2.txt') as f:  # here test_case1.txt is an input file with assembly code
     code = f.read().splitlines()
 
 with open('exp_output.txt') as f:  # here output.txt is an output file with machine code
@@ -50,7 +50,9 @@ operations = {
     "srl": ['r', "0110011"],
     "sra": ['r', "0110011"],
     "or": ['r', "0110011"],
-    "and": ['r', "0110011"]
+    "and": ['r', "0110011"],
+    "loadnoc": ['s', "0110011"],
+    "storenoc": ['i', "0000011"]
 }
 
 func3={
@@ -75,7 +77,9 @@ func3={
     "srl":"101",
     "sra":"101",
     "and":"111",
-    "or":"110"
+    "or":"110",
+    "loadnoc":"010",
+    "storenoc":"010"
 }
 
 func7={
@@ -168,7 +172,7 @@ output = []
 for line in code:
     temp_list = custom_split(line)
 
-    if temp_list[0] == "lw" :
+    if temp_list[0] == "lw" or temp_list[0]=="storenoc" :
         temp = temp_list[3]
         temp_list[3] = temp_list[2]
         temp_list[2] = temp
@@ -182,7 +186,7 @@ for line in code:
 
 
 for line_list in line_list_arr:
-
+    # print(line_list)
     if line_list[0] in operations.keys():
 
         if operations[line_list[0]][0] == "r":
