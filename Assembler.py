@@ -3,7 +3,7 @@ import re
 
 # code = sys.stdin.read().splitlines()
 
-with open('test_case2.txt') as f:  # here test_case1.txt is an input file with assembly code
+with open('test_case1.txt') as f:  # here test_case1.txt is an input file with assembly code
     code = f.read().splitlines()
 
 with open('exp_output.txt') as f:  # here output.txt is an output file with machine code
