@@ -6,8 +6,8 @@ import re
 with open('test_case1.txt') as f:  # here test_case1.txt is an input file with assembly code
     code = f.read().splitlines()
 
-with open('exp_output.txt') as f:  # here output.txt is an output file with machine code
-    exp_output = f.read().splitlines()
+# with open('exp_output.txt') as f:  # here output.txt is an output file with machine code
+#     exp_output = f.read().splitlines()
 
 register = {
     "x0": "00000", "x1": "00001", "x2": "00010", "x3": "00011", "x4": "00100", "x5": "00101", "x6": "00110", "x7": "00111", "x8": "01000","x9": "01001",
@@ -15,6 +15,7 @@ register = {
   "x20": "10100","x21": "10101","x22": "10110","x23": "10111","x24": "11000","x25": "11001","x26": "11010","x27": "11011",
   "x28": "11100","x29": "11101","x30": "11110","x31": "11111"
 }
+
 
 operations = {
     "lui": ['u', "0110111"],
@@ -163,6 +164,18 @@ def typeUJ(value, imm, rd):
     machinecode = imm[20] + imm[10:1] + imm[11] + imm[19:12] + register[rd] + operations[value][1]
     return machinecode
 
+def typeLOADNOC(value,imm,rs1,rs2):
+    imm = dec_to_binary(imm, 12)
+    machinecode = imm[0:7] + register[rs2] + register[rs1] + func3[value] + imm[7:11] + imm[11] + operations[value][1]
+    return machinecode
+
+
+def typeSTORENOC(value,imm,rs1,rd):
+    imm = dec_to_binary(imm, 12)
+    machinecode = imm + register[rs1] + func3[value] + register[rd] + operations[value][1]
+    return machinecode
+
+
 # -------------------------------------------PRINTING STARTS----------------------------------------------------------------------------
 
 i = 0
@@ -179,8 +192,7 @@ for line in code:
 
     line_list_arr.append(temp_list)
     # print(temp_list)
-
-    i+=1
+    
 
 # print(line_list_arr)
 

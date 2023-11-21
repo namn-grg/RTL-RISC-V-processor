@@ -1,7 +1,7 @@
 add x0, x1, x2
-sub x3, x4, x5
+add x3, x5,x4
 sw x6, 2(x7)
-addi x8, x10, 10
+addi x8, x10, 9
 slti x11, x9, 9
 xor x0, x12, x1
 srl x12, x3, x4
