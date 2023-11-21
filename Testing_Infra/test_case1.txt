@@ -1,0 +1,5 @@
+addi x23,x4,100
+xor x1,x23,x25
+sub x7,x5,x6
+and x12,x27,x20
+add x21,x10,x3
