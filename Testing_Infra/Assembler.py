@@ -151,7 +151,7 @@ def typeS(value, imm, rs2, rs1):
 
 def typeSB(value, imm, rs2, rs1):
     imm = dec_to_binary(imm, 13)
-    machinecode = imm[12] + imm[10:4:-1] + register[rs2] + register[rs1] + func3[value] + imm[4:0] + imm[11] + operations[value][1]
+    machinecode = imm[12] + imm[10:4:-1] + register[rs2] + register[rs1] + func3[value] + imm[4:0:-1] + imm[11] + operations[value][1]
     return machinecode
 
 def typeU(value, imm, rd):
