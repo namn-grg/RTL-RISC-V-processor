@@ -6,8 +6,8 @@ import re
 with open('test_case1.txt') as f:  # here test_case1.txt is an input file with assembly code
     code = f.read().splitlines()
 
-with open('exp_output.txt') as f:  # here output.txt is an output file with machine code
-    exp_output = f.read().splitlines()
+# with open('exp_output.txt') as f:  # here output.txt is an output file with machine code
+#     exp_output = f.read().splitlines()
 
 register = {
     "x0": "00000", "x1": "00001", "x2": "00010", "x3": "00011", "x4": "00100", "x5": "00101", "x6": "00110", "x7": "00111", "x8": "01000","x9": "01001",
@@ -15,6 +15,7 @@ register = {
   "x20": "10100","x21": "10101","x22": "10110","x23": "10111","x24": "11000","x25": "11001","x26": "11010","x27": "11011",
   "x28": "11100","x29": "11101","x30": "11110","x31": "11111"
 }
+
 
 operations = {
     "lui": ['u', "0110111"],
@@ -50,7 +51,9 @@ operations = {
     "srl": ['r', "0110011"],
     "sra": ['r', "0110011"],
     "or": ['r', "0110011"],
-    "and": ['r', "0110011"]
+    "and": ['r', "0110011"],
+    "loadnoc": ['s', "0110011"],
+    "storenoc": ['i', "0000011"]
 }
 
 func3={
@@ -63,9 +66,9 @@ func3={
     "lbu":"100",
     "sb":"000",
     "sw":"010",
-    "adii":"000",
+    "addi":"000",
     "slti":"010",
-    "addi":"111",
+    "andi":"111",
     "add":"000",
     "sub":"000",
     "sll":"001",
@@ -75,7 +78,9 @@ func3={
     "srl":"101",
     "sra":"101",
     "and":"111",
-    "or":"110"
+    "or":"110",
+    "loadnoc":"010",
+    "storenoc":"010"
 }
 
 func7={
@@ -136,17 +141,17 @@ def typeR(value, rs2, rs1, rd):
 
 def typeI(value, imm, rs1, rd):
     imm = dec_to_binary(imm, 12)
-    machinecode = imm[::-1] + register[rs1] + func3[value] + register[rd] + operations[value][1]
+    machinecode = imm + register[rs1] + func3[value] + register[rd] + operations[value][1]
     return machinecode
 
 def typeS(value, imm, rs2, rs1):
     imm = dec_to_binary(imm, 12)
-    machinecode = imm[11:4:-1] + register[rs2] + register[rs1] + func3[value] + imm[4:0:-1] + imm[0] + operations[value][1]
+    machinecode = imm[0:7] + register[rs2] + register[rs1] + func3[value] + imm[7:11] + imm[11] + operations[value][1]
     return machinecode
 
 def typeSB(value, imm, rs2, rs1):
     imm = dec_to_binary(imm, 13)
-    machinecode = imm[12] + imm[10:4:-1] + register[rs2] + register[rs1] + func3[value] + imm[4:0] + imm[11] + operations[value][1]
+    machinecode = imm[12] + imm[10:4:-1] + register[rs2] + register[rs1] + func3[value] + imm[4:0:-1] + imm[11] + operations[value][1]
     return machinecode
 
 def typeU(value, imm, rd):
@@ -159,6 +164,18 @@ def typeUJ(value, imm, rd):
     machinecode = imm[20] + imm[10:1] + imm[11] + imm[19:12] + register[rd] + operations[value][1]
     return machinecode
 
+def typeLOADNOC(value,imm,rs1,rs2):
+    imm = dec_to_binary(imm, 12)
+    machinecode = imm[0:7] + register[rs2] + register[rs1] + func3[value] + imm[7:11] + imm[11] + operations[value][1]
+    return machinecode
+
+
+def typeSTORENOC(value,imm,rs1,rd):
+    imm = dec_to_binary(imm, 12)
+    machinecode = imm + register[rs1] + func3[value] + register[rd] + operations[value][1]
+    return machinecode
+
+
 # -------------------------------------------PRINTING STARTS----------------------------------------------------------------------------
 
 i = 0
@@ -168,21 +185,20 @@ output = []
 for line in code:
     temp_list = custom_split(line)
 
-    if temp_list[0] == "lw" :
+    if temp_list[0] == "lw" or temp_list[0]=="storenoc" :
         temp = temp_list[3]
         temp_list[3] = temp_list[2]
         temp_list[2] = temp
 
     line_list_arr.append(temp_list)
-    print(temp_list)
-
-    i+=1
+    # print(temp_list)
+    
 
 # print(line_list_arr)
 
 
 for line_list in line_list_arr:
-
+    # print(line_list)
     if line_list[0] in operations.keys():
 
         if operations[line_list[0]][0] == "r":
@@ -212,6 +228,30 @@ for i in output:
 
 # -------------------------------------------PRINTING ENDS----------------------------------------------------------------------------
 
+# -------------------------------------------WRITING STARTS----------------------------------------------------------------------------
+
+# Function to convert 32-bit binary to 8-bit hexadecimal
+def binary32_to_8bit_hex(binary_string):
+    # Make sure the binary string is 32 bits long
+    if len(binary_string) != 32:
+        raise ValueError("Input must be a 32-bit binary number.")
+
+    # Split the 32-bit binary into four 8-bit segments
+    segments = [binary_string[i:i + 8] for i in range(0, 32, 8)]
+
+    # Convert each 8-bit segment to hexadecimal
+    hex_values = [format(int(segment, 2), '02X') for segment in segments]
+
+    # Concatenate the 8-bit hexadecimal segments
+    hex_result = ''.join(hex_values)
+
+    return hex_result
+
+with open("output.hex", "w") as file:
+    # Convert and write the 8-bit hexadecimal values to the file
+    for binary_string in output:
+        hex_value = binary32_to_8bit_hex(binary_string)
+        file.write(hex_value + "\n")
 
 # -------------------------------------------TESTING STARTS----------------------------------------------------------------------------
 
@@ -220,7 +260,8 @@ for i in output:
 #         print("Test case passed on line ", i)
 #     else:
 #         print("Test case failed on line ", i)
-#         print("Expected output: ", exp_output[i])
+#         print("Input:           ", code[i])
 #         print("Actual output:   ", output[i])
+#         print("Expected output: ", exp_output[i])
 
 # -------------------------------------------TESTING ENDS----------------------------------------------------------------------------
